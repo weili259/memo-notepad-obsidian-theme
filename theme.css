@@ -1,0 +1,852 @@
+/* ============================================================
+   Memo Notepad — Obsidian Theme
+   Inspired by memonotepad.com
+   木纹桌面 + 格子笔记本 美学
+   ============================================================ */
+
+/* ── WOOD TEXTURE (SVG data-URI, no external fetch needed) ── */
+/* We'll use a CSS-only approach with layered gradients to simulate:
+   1. Wood grain background (body/app)
+   2. Ruled notebook paper (editor)
+   3. Paper fiber texture (panels)
+*/
+
+.theme-light,
+.theme-dark {
+  /* ─── WOOD PALETTE ─────────────────────────────────────── */
+  --wood-base:          #e8d5a3;
+  --wood-dark:          #694300;
+  --wood-mid:           #c4a265;
+  --wood-light:         #f5e9cc;
+  --wood-grain-1:       rgba(105, 67,   0, 0.08);
+  --wood-grain-2:       rgba(180, 130,  60, 0.12);
+  --wood-grain-3:       rgba(220, 185, 100, 0.15);
+  --wood-shadow:        rgba(80,  45,   0, 0.25);
+
+  /* ─── NOTEBOOK PAPER ──────────────────────────────────── */
+  --paper-white:        rgba(255, 255, 255, 0.92);
+  --paper-tint:         rgba(248, 245, 235, 0.95);
+  --ruled-line:         rgba(53,  85,  131, 0.13);
+  --ruled-line-strong:  rgba(53,  85,  131, 0.22);
+  --red-margin:         rgba(161, 76,   70, 0.35);
+  --line-height-ruled:  30px;
+
+  /* ─── SIDEBAR ITEM COLORS ─────────────────────────────── */
+  --item-text:          rgba(105, 67,   0, 0.90);
+  --item-active-bg:     rgba(105, 67,   0, 0.90);
+  --item-active-text:   rgba(255, 205, 136, 0.95);
+  --item-hover-bg:      rgba(105, 67,   0, 0.12);
+
+  /* ─── OBSIDIAN VARIABLE OVERRIDES ────────────────────── */
+  --color-base-00:      #f5e9cc;
+  --color-base-10:      #eeddb5;
+  --color-base-20:      #e4d0a0;
+  --color-base-25:      #d9c08a;
+  --color-base-30:      #ceb07a;
+  --color-base-35:      #c4a265;
+  --color-base-40:      #b08840;
+  --color-base-50:      #8a6520;
+  --color-base-60:      #694300;
+  --color-base-70:      #4a2e00;
+  --color-base-100:     #2a1800;
+
+  --background-primary:          #ffffff;
+  --background-primary-alt:      #f8f5eb;
+  --background-secondary:        var(--wood-base);
+  --background-secondary-alt:    #dcc990;
+  --background-modifier-hover:   var(--item-hover-bg);
+  --background-modifier-active-hover: var(--item-active-bg);
+  --background-modifier-border:  rgba(105, 67, 0, 0.18);
+  --background-modifier-form-field: rgba(255,255,255,0.75);
+  --background-modifier-form-field-highlighted: rgba(255,255,255,0.90);
+
+  --text-normal:        #2a1800;
+  --text-muted:         rgba(105, 67, 0, 0.65);
+  --text-faint:         rgba(105, 67, 0, 0.40);
+  --text-on-accent:     #fff8ee;
+  --text-accent:        #694300;
+  --text-accent-hover:  #4a2e00;
+  --text-selection:     rgba(255, 205, 136, 0.45);
+
+  --interactive-normal:   rgba(105, 67, 0, 0.08);
+  --interactive-hover:    rgba(105, 67, 0, 0.16);
+  --interactive-accent:   #694300;
+  --interactive-accent-hover: #4a2e00;
+
+  --scrollbar-thumb-bg:  rgba(105, 67, 0, 0.30);
+
+  --font-text-size:    15px;
+  --font-text-theme:   'Georgia', 'Times New Roman', serif;
+  --font-monospace-theme: 'Courier New', 'Courier', monospace;
+  --font-interface-theme: 'Georgia', serif;
+
+  --border-width:      1px;
+  --radius-s:          2px;
+  --radius-m:          3px;
+  --radius-l:          4px;
+  --input-radius:      2px;
+  --tab-radius-active: 3px;
+
+  --divider-color:     rgba(105, 67, 0, 0.18);
+  --divider-color-hover: rgba(105, 67, 0, 0.35);
+}
+
+/* ── WOOD GRAIN BODY (SVG turbulence — realistic wood texture) ── */
+body {
+  background-color: var(--wood-base) !important;
+}
+
+.app-container,
+.workspace,
+.workspace-split,
+.workspace-tabs,
+.workspace-tab-container {
+  background-color: transparent !important;
+}
+
+/* Realistic wood grain via SVG feTurbulence embedded as data URI */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background-color: #e2c78f;
+  background-image: url("data:image/svg+xml;charset=utf-8,<svg xmlns='http://www.w3.org/2000/svg' width='600' height='600'><filter id='w'><feTurbulence type='fractalNoise' baseFrequency='.015,.12' numOctaves='5' seed='3' stitchTiles='stitch'/><feColorMatrix values='.18 .08 .03 0 .62  .14 .06 .02 0 .50  .06 .03 .01 0 .34  0 0 0 .5 0'/></filter><filter id='g'><feTurbulence type='fractalNoise' baseFrequency='.006,.2' numOctaves='3' seed='8' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 .07 0'/></filter><rect width='600' height='600' fill='%23e2c78f'/><rect width='600' height='600' filter='url(%23w)'/><rect width='600' height='600' filter='url(%23g)'/></svg>");
+  background-size: 600px 600px;
+  background-repeat: repeat;
+  pointer-events: none;
+}
+
+/* ── WORKSPACE LAYOUT ───────────────────────────────────────── */
+.workspace-split.mod-root {
+  background: transparent;
+}
+
+/* ── SIDEBAR (file explorer, left panel) ────────────────────── */
+.workspace-sidedock,
+.mod-left-split,
+.mod-right-split,
+.mod-left-split .workspace-tabs,
+.mod-right-split .workspace-tabs,
+.mod-left-split .workspace-tab-container,
+.mod-right-split .workspace-tab-container,
+.mod-left-split .workspace-leaf,
+.mod-right-split .workspace-leaf,
+.nav-files-container,
+.workspace-leaf-content[data-type="file-explorer"],
+.workspace-leaf-content[data-type="backlink"],
+.workspace-leaf-content[data-type="outline"],
+.workspace-leaf-content[data-type="search"] {
+  background: transparent !important;
+}
+
+.workspace-sidedock-vault-profile {
+  background: transparent !important;
+}
+
+/* Sidebar header toolbar & all sidebar chrome */
+.nav-header,
+.nav-buttons-container,
+.workspace-tab-header-container-inner,
+.workspace-drawer-vault-switcher,
+.workspace-drawer-vault-actions,
+.mod-left-split .workspace-tab-header-container,
+.mod-right-split .workspace-tab-header-container,
+.mod-left-split .view-header,
+.mod-right-split .view-header,
+.mod-left-split .workspace-tab-header,
+.mod-right-split .workspace-tab-header,
+.mod-left-split .workspace-tab-header.is-active,
+.mod-right-split .workspace-tab-header.is-active {
+  background: transparent !important;
+  background-color: transparent !important;
+}
+
+/* Left ribbon */
+.side-dock-ribbon {
+  background: linear-gradient(
+    to right,
+    rgba(80, 50, 0, 0.25),
+    rgba(105, 67, 0, 0.15)
+  ) !important;
+  border-right: 1px solid rgba(105, 67, 0, 0.20);
+}
+
+.side-dock-ribbon .side-dock-ribbon-action {
+  color: var(--item-text);
+}
+
+.side-dock-ribbon .side-dock-ribbon-action:hover,
+.side-dock-ribbon .side-dock-ribbon-action.is-active {
+  background: rgba(105, 67, 0, 0.20) !important;
+  color: var(--wood-dark);
+}
+
+/* ── NAV FILE ITEMS (sidebar list) ──────────────────────────── */
+.nav-file-title,
+.nav-folder-title {
+  color: var(--item-text) !important;
+  font-family: var(--font-text-theme);
+  font-size: 13.5px;
+  padding: 5px 10px 5px 16px;
+  border-radius: 0;
+  border-left: 3px solid transparent;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.nav-file-title:hover,
+.nav-folder-title:hover {
+  background: var(--item-hover-bg) !important;
+  border-left-color: rgba(105, 67, 0, 0.30);
+}
+
+.nav-file-title.is-active,
+.nav-file-title.is-active:hover {
+  background: var(--item-active-bg) !important;
+  color: var(--item-active-text) !important;
+  border-left-color: rgba(255, 205, 136, 0.60);
+  font-weight: 500;
+}
+
+.nav-folder-title.is-collapsed .nav-folder-collapse-indicator,
+.nav-folder-title .nav-folder-collapse-indicator {
+  color: inherit;
+  opacity: 0.6;
+}
+
+/* Tree lines */
+.tree-item-children {
+  border-left: 1px dashed rgba(105, 67, 0, 0.25);
+  margin-left: 14px;
+}
+
+/* ── TABS ────────────────────────────────────────────────────── */
+.workspace-tab-header-container {
+  background: rgba(180, 130, 60, 0.15) !important;
+  border-bottom: 1px solid rgba(105, 67, 0, 0.18);
+}
+
+.workspace-tab-header {
+  background: rgba(105, 67, 0, 0.08) !important;
+  border-radius: 3px 3px 0 0 !important;
+  color: var(--item-text);
+  border: 1px solid transparent;
+  border-bottom: none;
+  font-family: var(--font-text-theme);
+  font-size: 12.5px;
+  transition: background 0.12s ease;
+}
+
+.workspace-tab-header:hover {
+  background: rgba(105, 67, 0, 0.15) !important;
+}
+
+.workspace-tab-header.is-active {
+  background: rgba(255, 255, 255, 0.88) !important;
+  color: #2a1800 !important;
+  border-color: rgba(105, 67, 0, 0.18);
+  border-bottom-color: transparent !important;
+}
+
+.workspace-tab-header-new-tab {
+  color: var(--item-text);
+  opacity: 0.7;
+}
+
+/* ── EDITOR — RULED NOTEBOOK PAPER ──────────────────────────── */
+/* Paper base on the container */
+.workspace-leaf-content[data-type="markdown"] .view-content,
+.workspace-leaf-content[data-type="markdown"] {
+  background: #ffffff !important;
+}
+
+/* Source / Live Preview: ruled lines on the SCROLLING element so they follow content */
+.cm-editor {
+  background: transparent !important;
+}
+
+.cm-scroller {
+  background:
+    /* Ruled lines — every 30px, scrolls with content */
+    repeating-linear-gradient(
+      to bottom,
+      transparent 0px,
+      transparent 29px,
+      var(--ruled-line) 29px,
+      var(--ruled-line) 30px
+    ),
+    /* Paper fiber texture */
+    radial-gradient(ellipse at 20% 30%, rgba(200, 180, 140, 0.08) 0%, transparent 60%),
+    radial-gradient(ellipse at 80% 70%, rgba(210, 190, 150, 0.06) 0%, transparent 60%),
+    #ffffff !important;
+  background-attachment: local, local, local, local !important;
+  /* Offset so ruled lines align with text baselines */
+  background-position-y: 22px, 0, 0, 0 !important;
+}
+
+.cm-content {
+  font-family: var(--font-text-theme) !important;
+  font-size: 15px !important;
+  line-height: var(--line-height-ruled) !important;
+  color: #2a1800 !important;
+  caret-color: #694300;
+  padding: 30px 60px 40px 72px !important;
+}
+
+/* Reading view: ruled lines on the scrolling preview element */
+.markdown-reading-view {
+  background: transparent !important;
+}
+
+.markdown-preview-view {
+  background:
+    repeating-linear-gradient(
+      to bottom,
+      transparent 0px,
+      transparent 29px,
+      var(--ruled-line) 29px,
+      var(--ruled-line) 30px
+    ),
+    radial-gradient(ellipse at 20% 30%, rgba(200, 180, 140, 0.08) 0%, transparent 60%),
+    radial-gradient(ellipse at 80% 70%, rgba(210, 190, 150, 0.06) 0%, transparent 60%),
+    #ffffff !important;
+  background-attachment: local, local, local, local !important;
+  background-position-y: 22px, 0, 0, 0 !important;
+  font-family: var(--font-text-theme) !important;
+  font-size: 15px !important;
+  line-height: var(--line-height-ruled) !important;
+  color: #2a1800 !important;
+  padding: 30px 60px 40px 72px !important;
+}
+
+/* Red margin line (like real notebooks) */
+.cm-editor::before,
+.markdown-source-view.mod-cm6 .cm-editor::before {
+  content: '';
+  position: absolute;
+  left: 60px;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: var(--red-margin);
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* ── TYPOGRAPHY ─────────────────────────────────────────────── */
+/* h1–h6: line-height 和正文一致，用 padding 撑出间距，总高 = N × 30px */
+.markdown-preview-view :is(h1,h2,h3,h4,h5,h6),
+.markdown-source-view :is(h1,h2,h3,h4,h5,h6),
+.cm-header-1, .cm-header-2, .cm-header-3,
+.cm-header-4, .cm-header-5, .cm-header-6 {
+  line-height: var(--line-height-ruled) !important;
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+}
+
+/* 重置 Obsidian 编辑模式标题行容器的默认间距 */
+.HyperMD-header {
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+}
+
+.markdown-preview-view h1,
+.markdown-source-view h1,
+.cm-header-1 {
+  font-family: var(--font-text-theme);
+  font-size: 1.7em;
+  font-weight: 700;
+  color: #3d2000;
+  letter-spacing: -0.01em;
+  /* 用 box-shadow 代替 border-bottom，不占布局空间 */
+  border-bottom: none !important;
+  box-shadow: 0 2px 0 rgba(105, 67, 0, 0.20);
+  /* 总高 = 30(line) + 30(pad) = 60 = 2行 */
+  padding-bottom: var(--line-height-ruled) !important;
+}
+
+.markdown-preview-view h2,
+.markdown-source-view h2,
+.cm-header-2 {
+  font-family: var(--font-text-theme);
+  font-size: 1.35em;
+  font-weight: 600;
+  color: #4a2800;
+  border-bottom: none !important;
+  box-shadow: 0 1px 0 rgba(105, 67, 0, 0.14);
+  /* 总高 = 30(line) + 30(pad) = 60 = 2行 */
+  padding-bottom: var(--line-height-ruled) !important;
+}
+
+.markdown-preview-view h3,
+.markdown-source-view h3,
+.cm-header-3 {
+  font-family: var(--font-text-theme);
+  font-size: 1.1em;
+  font-weight: 600;
+  color: #5a3500;
+  /* 总高 = 30(line) + 30(pad) = 60 = 2行 */
+  padding-bottom: var(--line-height-ruled) !important;
+}
+
+/* h4–h6: 总高 = 30(line) + 30(pad) = 60 = 2行 */
+.markdown-preview-view :is(h4,h5,h6),
+.markdown-source-view :is(h4,h5,h6),
+.cm-header-4, .cm-header-5, .cm-header-6 {
+  padding-bottom: var(--line-height-ruled) !important;
+}
+
+/* Inline code */
+code {
+  font-family: var(--font-monospace-theme) !important;
+  background: rgba(105, 67, 0, 0.08) !important;
+  border: 1px solid rgba(105, 67, 0, 0.15) !important;
+  border-radius: 2px !important;
+  padding: 1px 4px !important;
+  font-size: 0.88em !important;
+  color: #5a3000 !important;
+}
+
+/* Code block */
+pre {
+  background: rgba(255, 255, 255, 0.85) !important;
+  border: 1px solid rgba(105, 67, 0, 0.20) !important;
+  border-left: 3px solid rgba(105, 67, 0, 0.45) !important;
+  border-radius: 2px !important;
+  box-shadow: 2px 2px 6px rgba(80, 45, 0, 0.08) !important;
+}
+
+/* Blockquote */
+blockquote {
+  border-left: 3px solid rgba(161, 76, 70, 0.50) !important;
+  background: rgba(255, 245, 235, 0.70) !important;
+  border-radius: 0 2px 2px 0 !important;
+  color: #5a3500 !important;
+  font-style: italic;
+  margin: 12px 0 !important;
+  padding: 6px 16px !important;
+}
+
+/* Links */
+a,
+.internal-link,
+.external-link {
+  color: #5a3000 !important;
+  text-decoration: underline;
+  text-decoration-color: rgba(90, 48, 0, 0.35);
+  text-underline-offset: 2px;
+}
+
+a:hover,
+.internal-link:hover,
+.external-link:hover {
+  color: #3d2000 !important;
+  text-decoration-color: rgba(61, 32, 0, 0.65);
+}
+
+/* Tags */
+.tag {
+  background: rgba(105, 67, 0, 0.12) !important;
+  border: 1px solid rgba(105, 67, 0, 0.22) !important;
+  color: var(--item-text) !important;
+  border-radius: 2px !important;
+  font-size: 0.82em !important;
+  padding: 1px 6px !important;
+}
+
+/* Horizontal rule */
+hr {
+  border-color: rgba(105, 67, 0, 0.22) !important;
+  border-style: dashed !important;
+}
+
+/* Bold / italic */
+strong { color: #3d2000 !important; }
+em { color: #5a3500 !important; }
+
+/* ── SEARCH / COMMAND PALETTE ────────────────────────────────── */
+.prompt {
+  background:
+    linear-gradient(rgba(53, 85, 131, 0.08) 0%, rgba(255,255,255,0.20) 4%),
+    rgba(255, 255, 255, 0.97) !important;
+  border: 1px solid rgba(105, 67, 0, 0.25) !important;
+  border-radius: 4px !important;
+  box-shadow:
+    0 8px 32px rgba(80, 45, 0, 0.22),
+    0 2px 8px rgba(80, 45, 0, 0.12) !important;
+  font-family: var(--font-text-theme);
+}
+
+.prompt-input {
+  background: transparent !important;
+  color: #2a1800 !important;
+  border-bottom: 1px solid rgba(105, 67, 0, 0.18) !important;
+  font-family: var(--font-text-theme);
+}
+
+.suggestion-item {
+  color: var(--item-text) !important;
+  font-family: var(--font-text-theme);
+  font-size: 13.5px;
+}
+
+.suggestion-item.is-selected {
+  background: var(--item-active-bg) !important;
+  color: var(--item-active-text) !important;
+}
+
+/* ── STATUS BAR ──────────────────────────────────────────────── */
+.status-bar {
+  background: rgba(105, 67, 0, 0.15) !important;
+  border-top: 1px solid rgba(105, 67, 0, 0.18) !important;
+  color: var(--item-text) !important;
+  font-family: var(--font-text-theme);
+  font-size: 11.5px;
+}
+
+/* ── SCROLLBARS ──────────────────────────────────────────────── */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(105, 67, 0, 0.05);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--scrollbar-thumb-bg);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(105, 67, 0, 0.50);
+}
+
+/* ── MODAL / SETTINGS ────────────────────────────────────────── */
+.modal {
+  background:
+    linear-gradient(rgba(53, 85, 131, 0.06) 0%, rgba(255,255,255,0.20) 3%),
+    repeating-linear-gradient(
+      to bottom,
+      transparent 0px,
+      transparent 24px,
+      rgba(53, 85, 131, 0.07) 24px,
+      rgba(53, 85, 131, 0.07) 25px
+    ),
+    rgba(255, 255, 255, 0.97) !important;
+  border: 1px solid rgba(105, 67, 0, 0.20) !important;
+  box-shadow: 0 12px 48px rgba(80, 45, 0, 0.28) !important;
+}
+
+.modal-title {
+  color: #2a1800 !important;
+  font-family: var(--font-text-theme);
+  border-bottom: 1px solid rgba(105, 67, 0, 0.15);
+}
+
+/* ── BUTTONS ─────────────────────────────────────────────────── */
+button.mod-cta,
+.mod-cta {
+  background: var(--item-active-bg) !important;
+  color: var(--item-active-text) !important;
+  border: 1px solid rgba(80, 45, 0, 0.35) !important;
+  border-radius: 2px !important;
+  font-family: var(--font-text-theme);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.15), 0 1px 3px rgba(80,45,0,0.20) !important;
+  transition: background 0.12s ease;
+}
+
+button.mod-cta:hover {
+  background: #4a2e00 !important;
+}
+
+/* ── TOOLBAR / RIBBON ICONS ──────────────────────────────────── */
+.workspace-ribbon.mod-left {
+  background: rgba(105, 67, 0, 0.12) !important;
+  border-right: 1px solid rgba(105, 67, 0, 0.18);
+}
+
+/* ── LISTS — uniform line height ────────────────────────────── */
+.markdown-preview-view ul,
+.markdown-preview-view ol,
+.markdown-source-view ul,
+.markdown-source-view ol {
+  margin-block-start: 0 !important;
+  margin-block-end: 0 !important;
+}
+
+.markdown-preview-view li,
+.markdown-source-view li,
+.cm-line .list-bullet,
+.HyperMD-list-line {
+  line-height: var(--line-height-ruled) !important;
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+}
+
+/* Obsidian adds padding to list content divs */
+.markdown-preview-view .list-bullet {
+  min-height: 0 !important;
+}
+
+.markdown-preview-view div > ul,
+.markdown-preview-view div > ol {
+  padding-block-start: 0 !important;
+  padding-block-end: 0 !important;
+}
+
+/* ── CHECKBOXES / TASKS ──────────────────────────────────────── */
+input[type="checkbox"] {
+  accent-color: #694300;
+}
+
+.task-list-item-checkbox {
+  border-color: rgba(105, 67, 0, 0.40) !important;
+}
+
+/* ── GRAPH VIEW ──────────────────────────────────────────────── */
+.graph-view.color-fill {
+  color: rgba(105, 67, 0, 0.80);
+}
+
+.graph-view.color-line {
+  color: rgba(105, 67, 0, 0.20);
+}
+
+.graph-view.color-text {
+  color: var(--item-text);
+}
+
+/* ── SEARCH HIGHLIGHT ────────────────────────────────────────── */
+.search-result-file-match mark,
+mark {
+  background: rgba(255, 205, 136, 0.55) !important;
+  color: #2a1800 !important;
+}
+
+/* ── FRONTMATTER ─────────────────────────────────────────────── */
+.frontmatter-container {
+  background: rgba(105, 67, 0, 0.05) !important;
+  border: 1px dashed rgba(105, 67, 0, 0.22) !important;
+  border-radius: 2px !important;
+}
+
+/* ── TABLE ───────────────────────────────────────────────────── */
+table {
+  border-collapse: collapse !important;
+  font-family: var(--font-text-theme) !important;
+}
+
+th {
+  background: rgba(105, 67, 0, 0.10) !important;
+  color: #3d2000 !important;
+  border: 1px solid rgba(105, 67, 0, 0.18) !important;
+  padding: 6px 12px !important;
+}
+
+td {
+  border: 1px solid rgba(105, 67, 0, 0.12) !important;
+  padding: 5px 12px !important;
+}
+
+tr:nth-child(even) td {
+  background: rgba(105, 67, 0, 0.04) !important;
+}
+
+/* ── WORKSPACE LEAF ──────────────────────────────────────────── */
+.workspace-leaf-resize-handle {
+  background: rgba(105, 67, 0, 0.12);
+}
+
+/* Leaf headers */
+.view-header {
+  background: rgba(180, 130, 60, 0.12) !important;
+  border-bottom: 1px solid rgba(105, 67, 0, 0.16) !important;
+  font-family: var(--font-text-theme);
+}
+
+.view-header-title {
+  color: #2a1800 !important;
+  font-weight: 600;
+}
+
+/* ── TITLE BAR ───────────────────────────────────────────────── */
+/* ── TITLE BAR & TOP AREA — all transparent for wood grain ──── */
+.titlebar,
+.titlebar-inner,
+.titlebar-button-container,
+.titlebar-text,
+.mod-top .workspace-tab-header-container,
+.workspace-tab-header-spacer,
+.sidebar-toggle-button,
+.workspace-tab-header-container-inner,
+.workspace-tab-container-before,
+.workspace-tab-container-after,
+.workspace-tab-container-inner,
+.mod-top-left-space,
+.mod-top-right-space,
+.workspace-tab-header-tab-list,
+body > .app-container > .titlebar,
+.is-hidden-frameless .titlebar {
+  background: transparent !important;
+  background-color: transparent !important;
+}
+
+/* Nuclear option: every direct child of titlebar */
+.titlebar * {
+  background-color: transparent !important;
+}
+
+/* ── EMPTY STATE ─────────────────────────────────────────────── */
+.workspace-leaf-content .empty-state-title,
+.workspace-leaf-content .empty-state-text {
+  color: var(--item-text) !important;
+  font-family: var(--font-text-theme);
+}
+
+/* ── PAPER SHEET SHADOW ──────────────────────────────────────── */
+/* Give the editor leaf a slight "paper on desk" shadow effect */
+.workspace-leaf-content[data-type="markdown"] {
+  box-shadow:
+    0 1px 3px rgba(80, 45, 0, 0.12),
+    0 4px 16px rgba(80, 45, 0, 0.10),
+    inset 0 0 0 1px rgba(105, 67, 0, 0.06) !important;
+}
+
+/* ── CALLOUTS ────────────────────────────────────────────────── */
+.callout {
+  background: rgba(255, 248, 235, 0.85) !important;
+  border-color: rgba(105, 67, 0, 0.30) !important;
+  border-radius: 2px !important;
+}
+
+.callout-title {
+  color: #3d2000 !important;
+  font-family: var(--font-text-theme);
+}
+
+/* ── DARK MODE OVERRIDE ──────────────────────────────────────── */
+/* For users who prefer dark, we shift to a darker walnut wood */
+.theme-dark {
+  --wood-base:          #2c1f0e;
+  --wood-dark:          #ffd080;
+  --wood-mid:           #6b4c1e;
+  --wood-light:         #3d2a12;
+  --item-text:          rgba(255, 205, 136, 0.90);
+  --item-active-bg:     rgba(255, 205, 136, 0.15);
+  --item-active-text:   #ffd080;
+  --item-hover-bg:      rgba(255, 205, 136, 0.08);
+
+  --background-primary:          #1e1408;
+  --background-primary-alt:      #261a0e;
+  --background-secondary:        #1a1005;
+  --background-modifier-border:  rgba(255, 205, 136, 0.15);
+  --background-modifier-form-field: rgba(0,0,0,0.35);
+
+  --text-normal:        rgba(255, 235, 195, 0.92);
+  --text-muted:         rgba(255, 205, 136, 0.55);
+  --text-faint:         rgba(255, 205, 136, 0.30);
+  --text-accent:        #ffd080;
+  --text-accent-hover:  #ffe0a0;
+  --text-selection:     rgba(255, 205, 136, 0.20);
+
+  --interactive-accent:       #c89040;
+  --interactive-accent-hover: #e0a850;
+
+  --scrollbar-thumb-bg:  rgba(255, 205, 136, 0.25);
+
+  --ruled-line:         rgba(180, 140, 80, 0.12);
+  --red-margin:         rgba(180, 90, 80, 0.28);
+}
+
+.theme-dark body::before {
+  background-color: #1e1408;
+  background-image: url("data:image/svg+xml;charset=utf-8,<svg xmlns='http://www.w3.org/2000/svg' width='600' height='600'><filter id='w'><feTurbulence type='fractalNoise' baseFrequency='.015,.12' numOctaves='5' seed='3' stitchTiles='stitch'/><feColorMatrix values='.12 .06 .02 0 .08  .08 .04 .01 0 .05  .04 .02 .01 0 .02  0 0 0 .7 0'/></filter><filter id='g'><feTurbulence type='fractalNoise' baseFrequency='.006,.2' numOctaves='3' seed='8' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 .12 0'/></filter><rect width='600' height='600' fill='%231e1408'/><rect width='600' height='600' filter='url(%23w)'/><rect width='600' height='600' filter='url(%23g)'/></svg>");
+  background-size: 600px 600px;
+  background-repeat: repeat;
+}
+
+.theme-dark .workspace-leaf-content[data-type="markdown"] .view-content,
+.theme-dark .workspace-leaf-content[data-type="markdown"] {
+  background: #1e1408 !important;
+}
+
+/* Dark mode: ruled lines on scrolling elements */
+.theme-dark .cm-scroller {
+  background:
+    repeating-linear-gradient(
+      to bottom,
+      transparent 0px,
+      transparent 29px,
+      var(--ruled-line) 29px,
+      var(--ruled-line) 30px
+    ),
+    #1e1408 !important;
+  background-attachment: local, local !important;
+  background-position-y: 22px, 0 !important;
+}
+
+.theme-dark .markdown-preview-view {
+  background:
+    repeating-linear-gradient(
+      to bottom,
+      transparent 0px,
+      transparent 29px,
+      var(--ruled-line) 29px,
+      var(--ruled-line) 30px
+    ),
+    #1e1408 !important;
+  background-attachment: local, local !important;
+  background-position-y: 22px, 0 !important;
+}
+
+.theme-dark .cm-content {
+  color: rgba(255, 235, 195, 0.90) !important;
+  caret-color: #ffd080;
+}
+
+.theme-dark strong { color: #ffe0b0 !important; }
+.theme-dark em { color: #ffd090 !important; }
+.theme-dark h1 { color: #ffe8b8 !important; border-bottom-color: rgba(255, 205, 136, 0.20) !important; }
+.theme-dark h2 { color: #ffd9a0 !important; }
+.theme-dark h3 { color: #ffcc88 !important; }
+
+.theme-dark code {
+  background: rgba(255, 205, 136, 0.10) !important;
+  border-color: rgba(255, 205, 136, 0.18) !important;
+  color: #ffcc80 !important;
+}
+
+.theme-dark blockquote {
+  background: rgba(255, 205, 136, 0.06) !important;
+  border-left-color: rgba(200, 110, 80, 0.45) !important;
+  color: rgba(255, 220, 160, 0.85) !important;
+}
+
+.theme-dark a,
+.theme-dark .internal-link,
+.theme-dark .external-link {
+  color: #ffc060 !important;
+  text-decoration-color: rgba(255, 192, 96, 0.35);
+}
+
+.theme-dark th {
+  background: rgba(255, 205, 136, 0.10) !important;
+  color: #ffe0a0 !important;
+  border-color: rgba(255, 205, 136, 0.15) !important;
+}
+
+.theme-dark td {
+  border-color: rgba(255, 205, 136, 0.08) !important;
+}
+
+.theme-dark tr:nth-child(even) td {
+  background: rgba(255, 205, 136, 0.04) !important;
+}
