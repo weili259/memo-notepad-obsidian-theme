@@ -659,9 +659,8 @@ mark {
   margin: 0 !important;
   gap: 0 !important;
   row-gap: 0 !important;
-  /* Force height to nearest 30px multiple: use display + overflow to clip */
-  display: flex !important;
-  flex-direction: column !important;
+  display: flex;
+  flex-direction: column;
 }
 
 /* Collapse the gap between heading and content */
