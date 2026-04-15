@@ -429,8 +429,8 @@ blockquote {
   border-radius: 0 2px 2px 0 !important;
   color: #5a3500 !important;
   font-style: italic;
-  margin: 12px 0 !important;
-  padding: 6px 16px !important;
+  margin: 0 0 30px 0 !important;
+  padding: 0 16px !important;
 }
 
 /* Links */
@@ -464,6 +464,9 @@ a:hover,
 hr {
   border-color: rgba(105, 67, 0, 0.22) !important;
   border-style: dashed !important;
+  margin: 0 0 30px 0 !important;
+  padding: 0 !important;
+  height: 0 !important;
 }
 
 /* Bold / italic */
@@ -573,6 +576,15 @@ button.mod-cta:hover {
   border-right: 1px solid rgba(105, 67, 0, 0.18);
 }
 
+/* ── PARAGRAPHS — snap to 30px grid ────────────────────────── */
+.markdown-preview-view p,
+.markdown-source-view p {
+  margin-top: 0 !important;
+  margin-bottom: 30px !important;
+  padding: 0 !important;
+  line-height: var(--line-height-ruled) !important;
+}
+
 /* ── LISTS — uniform line height ────────────────────────────── */
 .markdown-preview-view ul,
 .markdown-preview-view ol,
@@ -633,11 +645,84 @@ mark {
   color: #2a1800 !important;
 }
 
-/* ── FRONTMATTER ─────────────────────────────────────────────── */
+/* ── FRONTMATTER / PROPERTIES ───────────────────────────────── */
+/* Snap the entire properties block to the 30px ruled-line grid */
+/* Properties/metadata — snap to 30px grid */
+.metadata-container,
 .frontmatter-container {
-  background: rgba(105, 67, 0, 0.05) !important;
-  border: 1px dashed rgba(105, 67, 0, 0.22) !important;
+  background: rgba(255, 252, 245, 0.97) !important;
+  outline: 1px dashed rgba(105, 67, 0, 0.22);
+  outline-offset: -1px;
+  border: none !important;
   border-radius: 2px !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  gap: 0 !important;
+  row-gap: 0 !important;
+  /* Force height to nearest 30px multiple: use display + overflow to clip */
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+/* Collapse the gap between heading and content */
+.metadata-container .metadata-properties-heading {
+  margin-bottom: 0 !important;
+  padding-bottom: 0 !important;
+}
+
+.metadata-container .metadata-content {
+  margin-top: 0 !important;
+  padding-top: 0 !important;
+}
+
+.metadata-container .metadata-properties {
+  margin-top: 0 !important;
+  padding-top: 0 !important;
+}
+
+/* Properties wrapper — no extra spacing */
+.metadata-container .metadata-properties,
+.metadata-container .metadata-content {
+  padding: 0 !important;
+  margin: 0 !important;
+  border: none !important;
+  gap: 0 !important;
+  row-gap: 0 !important;
+}
+
+/* Each row inside metadata = exactly 30px */
+.metadata-container .metadata-properties-heading,
+.metadata-container .metadata-property,
+.metadata-container .metadata-add-button {
+  height: 30px !important;
+  line-height: 30px !important;
+  min-height: 0 !important;
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+  margin: 0 !important;
+  border: none !important;
+  box-shadow: 0 1px 0 rgba(105, 67, 0, 0.08) !important;
+  overflow: hidden !important;
+}
+
+/* Kill borders and force 30px height on inputs inside property rows */
+.metadata-container .metadata-property * {
+  border: none !important;
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+}
+
+body .metadata-container .metadata-property input.metadata-property-key-input,
+body .metadata-container .metadata-property input,
+body .metadata-container input {
+  height: 30px !important;
+  max-height: 30px !important;
+  line-height: 30px !important;
+  font-size: 14px !important;
+  padding: 0 8px !important;
+  box-sizing: border-box !important;
 }
 
 /* ── TABLE ───────────────────────────────────────────────────── */
