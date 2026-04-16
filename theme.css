@@ -356,7 +356,16 @@ body::before {
   padding-bottom: 0 !important;
 }
 
-.markdown-preview-view h1,
+/* Inline title — match editing view sizing for grid alignment */
+.markdown-reading-view .inline-title {
+  font-family: var(--font-text-theme) !important;
+  font-size: 29px !important;
+  font-weight: 700 !important;
+  color: #3d2000 !important;
+  margin: 0 0 15px 0 !important;
+  padding: 0 !important;
+}
+
 .markdown-source-view h1,
 .cm-header-1 {
   font-family: var(--font-text-theme);
@@ -364,14 +373,12 @@ body::before {
   font-weight: 700;
   color: #3d2000;
   letter-spacing: -0.01em;
-  /* 用 box-shadow 代替 border-bottom，不占布局空间 */
   border-bottom: none !important;
   box-shadow: 0 2px 0 rgba(105, 67, 0, 0.20);
-  /* 总高 = 30(line) + 30(pad) = 60 = 2行 */
+  /* 编辑模式: 总高 = 30(line) + 30(pad) = 60 = 2行 */
   padding-bottom: var(--line-height-ruled) !important;
 }
 
-.markdown-preview-view h2,
 .markdown-source-view h2,
 .cm-header-2 {
   font-family: var(--font-text-theme);
@@ -380,26 +387,55 @@ body::before {
   color: #4a2800;
   border-bottom: none !important;
   box-shadow: 0 1px 0 rgba(105, 67, 0, 0.14);
-  /* 总高 = 30(line) + 30(pad) = 60 = 2行 */
   padding-bottom: var(--line-height-ruled) !important;
 }
 
-.markdown-preview-view h3,
 .markdown-source-view h3,
 .cm-header-3 {
   font-family: var(--font-text-theme);
   font-size: 1.1em;
   font-weight: 600;
   color: #5a3500;
-  /* 总高 = 30(line) + 30(pad) = 60 = 2行 */
   padding-bottom: var(--line-height-ruled) !important;
 }
 
-/* h4–h6: 总高 = 30(line) + 30(pad) = 60 = 2行 */
-.markdown-preview-view :is(h4,h5,h6),
 .markdown-source-view :is(h4,h5,h6),
 .cm-header-4, .cm-header-5, .cm-header-6 {
   padding-bottom: var(--line-height-ruled) !important;
+}
+
+/* 阅读模式: 标题不加额外 padding，只占 1 行 */
+.markdown-preview-view h1 {
+  font-family: var(--font-text-theme);
+  font-size: 1.7em;
+  font-weight: 700;
+  color: #3d2000;
+  letter-spacing: -0.01em;
+  border-bottom: none !important;
+  box-shadow: 0 2px 0 rgba(105, 67, 0, 0.20);
+  padding-bottom: var(--line-height-ruled) !important;
+}
+
+.markdown-preview-view h2 {
+  font-family: var(--font-text-theme);
+  font-size: 1.35em;
+  font-weight: 600;
+  color: #4a2800;
+  border-bottom: none !important;
+  box-shadow: 0 1px 0 rgba(105, 67, 0, 0.14);
+  padding-bottom: 0 !important;
+}
+
+.markdown-preview-view h3 {
+  font-family: var(--font-text-theme);
+  font-size: 1.1em;
+  font-weight: 600;
+  color: #5a3500;
+  padding-bottom: 0 !important;
+}
+
+.markdown-preview-view :is(h4,h5,h6) {
+  padding-bottom: 0 !important;
 }
 
 /* Inline code */
@@ -580,9 +616,14 @@ button.mod-cta:hover {
 .markdown-preview-view p,
 .markdown-source-view p {
   margin-top: 0 !important;
-  margin-bottom: 30px !important;
+  margin-bottom: 0 !important;
   padding: 0 !important;
   line-height: var(--line-height-ruled) !important;
+}
+
+/* Only add blank-line gap between consecutive paragraphs in reading view */
+.markdown-preview-view p + p {
+  margin-top: 30px !important;
 }
 
 /* ── LISTS — uniform line height ────────────────────────────── */
